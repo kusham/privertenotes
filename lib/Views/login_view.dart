@@ -48,25 +48,28 @@ class _LoginViewState extends State<LoginView> {
             obscureText: true,
             decoration: const InputDecoration(hintText: "Enter password"),
           ),
-          // TextButton(
-          //   onPressed: () async {
-          //     final email = _email.text;
-          //     final password = _password.text;
+          TextButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
 
-          //     try {
-          //       final userCredentials = await FirebaseAuth.instance
-          //           .signInWithEmailAndPassword(
-          //               email: email, password: password);
-          //       devtool.log(userCredentials.toString()ebaseAuthException catch (e) {
-          //       if (e.code == "user-not-found") {
-          //         devtool.log("User not found");
-          //       } else if (e.code == "wrong-password") {
-          //         devtool.log("wrong password");
-          //       }
-          //     }
-          //   },
-          //   child: const Text("Login"),
-          // ),
+              try {
+                final userCredentials = await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(
+                        email: email, password: password);
+                devtool.log(userCredentials.toString());
+                 Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/main', (route) => false);
+              } on FirebaseAuthException catch (e) {
+                if (e.code == "user-not-found") {
+                  devtool.log("User not found");
+                } else if (e.code == "wrong-password") {
+                  devtool.log("wrong password");
+                }
+              }
+            },
+            child: const Text("Login"),
+          ),
           TextButton(
               onPressed: () {
                 Navigator.of(context)
