@@ -72,7 +72,11 @@ class _LoginViewState extends State<LoginView> {
                 } else if (e.code == "wrong-password") {
                   // devtool.log("wrong password");
                   await showErrorDialog(context, "Wrong credentials");
+                } else {
+                  await showErrorDialog(context, "Error : ${e.code}");
                 }
+              } catch (e) {
+                  await showErrorDialog(context, e.toString());
               }
             },
             child: const Text("Login"),
