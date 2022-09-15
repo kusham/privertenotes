@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtool show log;
@@ -57,10 +59,16 @@ class _RegisterViewState extends State<RegisterView> {
                 final email = _email.text;
                 final password = _password.text;
 
-                final userCredentials = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
+                final userCredentials =
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
                 devtool.log(userCredentials.toString());
+                final user = FirebaseAuth.instance.currentUser;
+
+                await user?.sendEmailVerification();
+                Navigator.of(context).pushNamed(verifyEmailRoute);
               } on FirebaseAuthException catch (e) {
                 if (e.code == "weak-password") {
                   // devtool.log("Weak password");
@@ -76,7 +84,7 @@ class _RegisterViewState extends State<RegisterView> {
                   devtool.log(e.code);
                 }
               } catch (e) {
-                  await showErrorDialog(context, e.toString());
+                await showErrorDialog(context, e.toString());
               }
             },
             child: const Text("Register"),
