@@ -64,9 +64,18 @@ class _LoginViewState extends State<LoginView> {
                   password: password,
                 );
                 devtool.log(userCredentials.toString());
-                // ignore: use_build_context_synchronously
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                final user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  if (user.emailVerified) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      notesRoute,
+                      (route) => false,
+                    );
+                  } else {
+                    Navigator.of(context).pushNamed(verifyEmailRoute);
+                  }
+                }
               } on FirebaseAuthException catch (e) {
                 if (e.code == "user-not-found") {
                   devtool.log("User not found");
@@ -78,7 +87,7 @@ class _LoginViewState extends State<LoginView> {
                   await showErrorDialog(context, "Error : ${e.code}");
                 }
               } catch (e) {
-                  await showErrorDialog(context, e.toString());
+                await showErrorDialog(context, e.toString());
               }
             },
             child: const Text("Login"),
