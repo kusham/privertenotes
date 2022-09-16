@@ -65,16 +65,19 @@ class _LoginViewState extends State<LoginView> {
                 );
                 devtool.log(userCredentials.toString());
                 final user = FirebaseAuth.instance.currentUser;
-                if (user != null) {
-                  if (user.emailVerified) {
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      notesRoute,
-                      (route) => false,
-                    );
-                  } else {
-                    Navigator.of(context).pushNamed(verifyEmailRoute);
-                  }
+
+                if (user?.emailVerified ?? false) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    notesRoute,
+                    (route) => false,
+                  );
+                } else {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (route) => false,
+                  );
                 }
               } on FirebaseAuthException catch (e) {
                 if (e.code == "user-not-found") {
