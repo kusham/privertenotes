@@ -1,14 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:privertenotes/Views/login_view.dart';
 import 'package:privertenotes/Views/register_view.dart';
 import 'package:privertenotes/Views/verify_email_view.dart';
 import 'package:privertenotes/constants/routes.dart';
+import 'package:privertenotes/services/auth/auth_service.dart';
 import 'Views/note_view.dart';
 import 'firebase_options.dart';
 import 'dart:developer' as devtool show log;
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +17,8 @@ void main() {
       routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
-        notesRoute :(context) => const NotesView(),
-        verifyEmailRoute :(context) =>  const VerifyEmailView(),
+        notesRoute: (context) => const NotesView(),
+        verifyEmailRoute: (context) => const VerifyEmailView(),
       }));
 }
 
@@ -30,15 +28,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
+      future: AuthService.firebase().initialize(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
+            final user = AuthService.firebase().currentUser;
             if (user != null) {
-              if (user.emailVerified) {
+              if (user.isEmailVerified) {
                 devtool.log("Email is verified");
                 return const NotesView();
               } else {
@@ -47,7 +43,6 @@ class HomePage extends StatelessWidget {
             } else {
               return const LoginView();
             }
-
 
           // if (user?.emailVerified ?? false) {
           //   print("You are a verified user");
@@ -62,4 +57,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
