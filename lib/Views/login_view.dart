@@ -59,7 +59,7 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                AuthService.firebase().logIn(email: email, password: password);
+               await AuthService.firebase().logIn(email: email, password: password);
 
                 final user = AuthService.firebase().currentUser;
 
