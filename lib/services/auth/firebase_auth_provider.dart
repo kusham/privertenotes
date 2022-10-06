@@ -95,7 +95,6 @@ class FirebaseAuthProvider implements AuthProvider {
     } else {
       throw UserNotFoundAuthException();
     }
-    throw UnimplementedError();
   }
 
   @override
