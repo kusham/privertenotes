@@ -48,7 +48,7 @@ void main() {
       final user = await provider.createUser(
         email: 'foo',
         password: 'bar',
-      );
+      ); 
       expect(provider.currentUser, user);
       expect(user.isEmailVerified, false);
     });
