@@ -13,6 +13,15 @@ class DatabaseNotOpen implements Exception {}
 class NotesService {
   Database? _db;
 
+  Database _getDatabaseOrThrow() {
+    final db = _db;
+    if (db == null) {
+      throw DatabaseNotOpen();
+    } else {
+      return db;
+    }
+  }
+
   Future<void> close() async {
     final db = _db;
     if (db == null) {
