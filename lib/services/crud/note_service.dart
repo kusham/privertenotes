@@ -32,23 +32,23 @@ class NotesService {
     }
   }
 
-  Future<void> open() async {
-    if (_db != null) {
-      throw DatabaseAlreadyOpenException();
-    }
-    try {
-      final docsPath = await getApplicationDocumentsDirectory();
-      final dbPath = join(docsPath.path, dbName);
-      final db = await openDatabase(dbPath);
-      _db = db;
+  // Future<void> open() async {
+  //   if (_db != null) {
+  //     throw DatabaseAlreadyOpenException();
+  //   }
+  //   try {
+  //     final docsPath = await getApplicationDocumentsDirectory();
+  //     final dbPath = join(docsPath.path, dbName);
+  //     final db = await openDatabase(dbPath);
+  //     _db = db;
 
-      await db.execute(createUserTable);
+  //     await db.execute(createUserTable);
 
-      await db.execute(createNoteTable);
-    } on MissingPlatformDirectoryException {
-      UnableToGetDocumentDirectory();
-    }
-  }
+  //     await db.execute(createNoteTable);
+  //   } on MissingPlatformDirectoryException {
+  //     UnableToGetDocumentDirectory();
+  //   }
+  // // }
 }
 
 @immutable
