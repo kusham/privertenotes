@@ -9,8 +9,41 @@ class UnableToGetDocumentDirectory implements Exception {}
 
 class DatabaseNotOpen implements Exception {}
 
+class CouldNotDeleteUser implements Exception {}
+
+class UserAlreadyExists implements Exception {}
+
 class NotesService {
   Database? _db;
+
+  Future<DatabaseUser> createUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final results = await db.query(
+      userTable,
+      limit: 1,
+      where: 'email = ?',
+      whereArgs: [email.toLowerCase()],
+    );
+
+    if (results.isNotEmpty) {
+      throw UserAlreadyExists();
+    }
+    final userId =
+        await db.insert(userTable, {emailColumn: email.toLowerCase()});
+    return DatabaseUser(id: userId, email: email);
+  }
+
+  Future<void> deleteUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final deletedCount = await db.delete(
+      userTable,
+      where: 'email = ?',
+      whereArgs: [email.toLowerCase()],
+    );
+    if (deletedCount != 1) {
+      throw CouldNotDeleteUser();
+    }
+  }
 
   Database _getDatabaseOrThrow() {
     final db = _db;
@@ -73,7 +106,6 @@ class DatabaseUser {
   @override
   int get hashCode => id.hashCode;
 }
-
 
 // -------------------Database Note--------------------------
 
