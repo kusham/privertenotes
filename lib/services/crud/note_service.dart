@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart'
-    show getApplicationDocumentsDirectory;
+import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
 class DatabaseAlreadyOpenException implements Exception {}
@@ -32,25 +31,26 @@ class NotesService {
     }
   }
 
-  // Future<void> open() async {
-  //   if (_db != null) {
-  //     throw DatabaseAlreadyOpenException();
-  //   }
-  //   try {
-  //     final docsPath = await getApplicationDocumentsDirectory();
-  //     final dbPath = join(docsPath.path, dbName);
-  //     final db = await openDatabase(dbPath);
-  //     _db = db;
+  Future<void> open() async {
+    if (_db != null) {
+      throw DatabaseAlreadyOpenException();
+    }
+    try {
+      final docsPath = await getApplicationDocumentsDirectory();
+      final dbPath = join(docsPath.path, dbName);
+      final db = await openDatabase(dbPath);
+      _db = db;
 
-  //     await db.execute(createUserTable);
+      await db.execute(createUserTable);
 
-  //     await db.execute(createNoteTable);
-  //   } on MissingPlatformDirectoryException {
-  //     UnableToGetDocumentDirectory();
-  //   }
-  // // }
+      await db.execute(createNoteTable);
+    } on MissingPlatformDirectoryException {
+      UnableToGetDocumentDirectory();
+    }
+  }
 }
 
+// -------------------Database user--------------------------
 @immutable
 class DatabaseUser {
   final int id;
@@ -73,6 +73,9 @@ class DatabaseUser {
   @override
   int get hashCode => id.hashCode;
 }
+
+
+// -------------------Database Note--------------------------
 
 class DatabaseNote {
   final int id;
