@@ -3,23 +3,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
-class DatabaseAlreadyOpenException implements Exception {}
+import 'crud_exceptions.dart';
 
-class UnableToGetDocumentDirectory implements Exception {}
 
-class DatabaseNotOpen implements Exception {}
-
-class CouldNotDeleteUser implements Exception {}
-
-class UserAlreadyExists implements Exception {}
-
-class CouldNotFindUser implements Exception {}
-
-class CouldNotDeleteNote implements Exception {}
-
-class CouldNotFindNote implements Exception {}
-
-class CouldNotUpdateNote implements Exception {}
 
 class NotesService {
   Database? _db;
@@ -43,9 +29,8 @@ class NotesService {
     }
   }
 
-  Future<DatabaseNote> updateNote(
-      {required DatabaseNote note, required String text}) async {
-    final db = _getDatabaseOrThrow();
+  Future<DatabaseNote> updateNote({required DatabaseNote note, required String text}) async {
+        final db = _getDatabaseOrThrow();
     await getNote(id: note.id);
     final updatedCount = await db.update(noteTable, {
       textColumn: text,
