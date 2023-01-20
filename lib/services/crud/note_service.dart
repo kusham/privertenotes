@@ -15,8 +15,17 @@ class UserAlreadyExists implements Exception {}
 
 class CouldNotFindUser implements Exception {}
 
+class CouldNotDeleteNote implements Exception {}
+
 class NotesService {
   Database? _db;
+Future<DatabaseNote> 
+
+  Future<int> deleteAllNotes() async {
+    final db = _getDatabaseOrThrow();
+    return await db.delete(noteTable);
+  }
+
   Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
     final db = _getDatabaseOrThrow();
     final dbUser = await getUser(email: owner.email);
@@ -34,6 +43,18 @@ class NotesService {
         id: noteId, userId: owner.id, text: text, isSyncedWithCloud: true);
 
     return note;
+  }
+
+  Future<void> deleteNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+    final deletedCount = await db.delete(
+      noteTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (deletedCount == 0) {
+      throw CouldNotDeleteNote();
+    }
   }
 
   Future<DatabaseUser> getUser({required String email}) async {
