@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:privertenotes/services/auth/auth_service.dart';
 import 'package:privertenotes/services/crud/note_service.dart';
-import '../constants/routes.dart';
-import '../enums/menu_action.dart';
+import '../../constants/routes.dart';
+import '../../enums/menu_action.dart';
 import 'dart:developer' as devtool show log;
 
 class NotesView extends StatefulWidget {

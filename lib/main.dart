@@ -4,7 +4,7 @@ import 'package:privertenotes/Views/register_view.dart';
 import 'package:privertenotes/Views/verify_email_view.dart';
 import 'package:privertenotes/constants/routes.dart';
 import 'package:privertenotes/services/auth/auth_service.dart';
-import 'Views/note_view.dart';
+import 'Views/notes/note_view.dart';
 import 'firebase_options.dart';
 import 'dart:developer' as devtool show log;
 
