@@ -48,7 +48,7 @@ void main() {
       final user = await provider.createUser(
         email: 'foo',
         password: 'bar',
-      ); 
+      );
       expect(provider.currentUser, user);
       expect(user.isEmailVerified, false);
     });
@@ -58,16 +58,15 @@ void main() {
       final user = provider.currentUser;
       expect(user, isNotNull);
       expect(user!.isEmailVerified, true);
-
     });
 
-    test('Should be able to logout and login again', () async{
-     await provider.logOut();
+    test('Should be able to logout and login again', () async {
+      await provider.logOut();
 
-     await provider.logIn(
-      email: 'email',
-      password: 'password',
-     );
+      await provider.logIn(
+        email: 'email',
+        password: 'password',
+      );
       final user = provider.currentUser;
       expect(user, isNotNull);
     });
@@ -80,6 +79,7 @@ class MockAuthProvider implements AuthProvider {
   AuthUser? _user;
   var _isInitialized = false;
   bool get isInitialized => _isInitialized;
+  
   @override
   Future<AuthUser> createUser({
     required String email,
@@ -110,7 +110,10 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitializedException();
     if (email == 'foo@bar.com') throw UserNotFoundAuthException();
     if (password == 'foobar') throw WrongPasswordAuthException();
-    const user = AuthUser(isEmailVerified: false);
+    const user = AuthUser(
+      isEmailVerified: false,
+      email: 'foo@bar.com',
+    );
     _user = user;
     return Future.value(user);
   }
@@ -129,7 +132,10 @@ class MockAuthProvider implements AuthProvider {
     final user = _user;
     if (user == null) throw UserNotFoundAuthException();
 
-    const newUser = AuthUser(isEmailVerified: true);
+    const newUser = AuthUser(
+      isEmailVerified: true,
+      email: 'foo@bar.com',
+    );
     _user = newUser;
   }
 }
