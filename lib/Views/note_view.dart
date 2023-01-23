@@ -33,32 +33,51 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Main UI"),
-        actions: [
-          PopupMenuButton(
-              onSelected: (Menu item) async {
-                devtool.log(item.toString());
-                switch (item) {
-                  case Menu.logout:
-                    final shouldLogOut = await showLogOutDialog(context);
-                    if (shouldLogOut) {
-                      await AuthService.firebase().logOut();
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          loginRoute, (route) => false);
-                    }
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
-                    const PopupMenuItem<Menu>(
-                      value: Menu.logout,
-                      child: Text('Logout'),
-                    ),
-                  ]),
-        ],
-      ),
-      body: const Text("Hello world"),
-    );
+        appBar: AppBar(
+          title: const Text("Main UI"),
+          actions: [
+            PopupMenuButton(
+                onSelected: (Menu item) async {
+                  devtool.log(item.toString());
+                  switch (item) {
+                    case Menu.logout:
+                      final shouldLogOut = await showLogOutDialog(context);
+                      if (shouldLogOut) {
+                        await AuthService.firebase().logOut();
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            loginRoute, (route) => false);
+                      }
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
+                      const PopupMenuItem<Menu>(
+                        value: Menu.logout,
+                        child: Text('Logout'),
+                      ),
+                    ]),
+          ],
+        ),
+        body: FutureBuilder(
+          future: _notesService.getOrCreateUser(email: userEmail),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                return StreamBuilder(
+                    stream: _notesService.allNotes,
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return const Text("Waiting for all notes...");
+
+                        default:
+                          return const CircularProgressIndicator();
+                      }
+                    });
+              default:
+                return const CircularProgressIndicator();
+            }
+          },
+        ));
   }
 }
 
