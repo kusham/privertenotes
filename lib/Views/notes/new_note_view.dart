@@ -23,6 +23,18 @@ class _NewNoteViewState extends State<NewNoteView> {
     super.initState();
   }
 
+  void _textControllerListener() async {
+    final note = _note;
+    if (note == null) {
+      return;
+    }
+    final text = _textEditingController.text;
+    await _notesService.updateNote(
+      note: note,
+      text: text,
+    );
+  }
+
   Future<DatabaseNote> createNewNote() async {
     final existingNote = _note;
 
@@ -67,7 +79,7 @@ class _NewNoteViewState extends State<NewNoteView> {
       appBar: AppBar(
         title: const Text("New Note"),
       ),
-      body: const Text("Write your new Note here..."),
+      body: const Text("Write your new Note here.. "),
     );
   }
 }
