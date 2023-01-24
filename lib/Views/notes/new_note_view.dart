@@ -35,6 +35,11 @@ class _NewNoteViewState extends State<NewNoteView> {
     );
   }
 
+  void _setupTextControllerListener() async {
+    _textEditingController.removeListener(_textControllerListener);
+    _textEditingController.addListener(_textControllerListener);
+  }
+
   Future<DatabaseNote> createNewNote() async {
     final existingNote = _note;
 
