@@ -24,7 +24,6 @@ class _NotesViewState extends State<NotesView> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +68,18 @@ class _NotesViewState extends State<NotesView> {
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
                         case ConnectionState.active:
-                          return const Text("Waiting for all notes...");
+                          if (snapshot.hasData) {
+                            final allNotes =
+                                snapshot.data as List<DatabaseNote>;
+                            return ListView.builder(
+                              itemCount: allNotes.length,
+                              itemBuilder: (context, index) {
+                                return const Text("Item");
+                              },
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
 
                         default:
                           return const CircularProgressIndicator();
