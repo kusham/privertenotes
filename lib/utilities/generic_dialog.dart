@@ -9,5 +9,15 @@ Future<T?> showGenericDialog<T>(
   required String content,
   required DialogOptionBuilder optionBuilder,
 ) {
- 
+ final options = optionBuilder();
+ return showDialog(context: context, builder: (content) {
+  return AlertDialog(
+    title: Text(title),
+    content: Text(content),
+    actions: options.keys.map((optionTitle) => {
+      final T value = options[optionTitle];
+      return TextButton()
+    }),
+  );
+ });
 }
