@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:privertenotes/Views/notes/notes_list_view.dart';
 import 'package:privertenotes/services/auth/auth_service.dart';
 import 'package:privertenotes/services/crud/note_service.dart';
 import '../../constants/routes.dart';
 import '../../enums/menu_action.dart';
 import 'dart:developer' as devtool show log;
+
+import '../../utilities/dialogs/logout_dialog.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
@@ -72,19 +75,11 @@ class _NotesViewState extends State<NotesView> {
                             final allNotes =
                                 snapshot.data as List<DatabaseNote>;
                             print(allNotes);
-                            return ListView.builder(
-                              itemCount: allNotes.length,
-                              itemBuilder: (context, index) {
-                                final note = allNotes[index];
-                                return ListTile(
-                                    title: Text(
-                                  note.text,
-                                  maxLines: 1,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ));
-                              },
-                            );
+                            return NotesListView(
+                                notes: allNotes,
+                                onDeleteNote: (note) async {
+                                  await _notesService.deleteNote(id: note.id);
+                                });
                           } else {
                             return const CircularProgressIndicator();
                           }
